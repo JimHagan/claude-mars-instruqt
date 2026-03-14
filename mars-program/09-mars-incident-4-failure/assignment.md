@@ -33,39 +33,42 @@ This is trickier than a total outage. Customers are having inconsistent experien
 
 Use New Relic to investigate and identify:
 
-1. **Paste the name of the service** that is intermittently failing?
+1. **What is the name of the service** that is intermittently failing?
 2. **What is the approximate error rate** observed in APM?
-3. **Past the name of the transaction that** is failing?
+3. **What is the name of the failing transaction?**
 
 ## 🔍 Investigation Guide
 
 Start broad, then narrow down.  As always check your configured workloads to get awareness of impacted entities:
 
 
-### Step 1: Dig into APM
+### Step 1: A Little About Alerts
+
+In a real environment you may receive a page related to an alert in New Relic.  This is often the first thing you'll look at as you may not even be in front of your computer.  From that brief glance you may be able to see what service or services are impacted and what the general issue is: `high error rate`, `high latency` etc. 
+
+When an alert fires to create an incident it may be associated with one or more service.   When you see a service in the entities overview or in a workload the color of that alert will be red if it's assocated with an open alert incident.
+
+For our exercise let's shart with our workload.
+
+### Step 2: Review Your Workload 
+
+Look at your workload.  You'll see that one or more of the services are showing `red`.  This means there are active alerts on those servies.  You may click on the icons for those services to see the incident summary.  Since `checkout` is the common starting point for payment processing you may see that it is currently impacted.
+
+However let's try to find the `downstream` cause of it's current state.
+
+### Step 3: Dig into APM
 1. Go to **APM & Services**
-2. Look for services with elevated **error rates** (check the error % column) — **note the approximate error percentage**
-3. Click into the affected service and examine:
-   - The **Errors** tab — look at the error messages and stack traces
+2. Click into the `checkout` service and examine:
+   - The **Errors** Inbox — look at the error messages and stack traces
    - **Distributed Tracing** — find traces with errors and examine the failing span
+   - Find out which **downstream** service is throwing an error.
+   - View the APM summary for **that** downstream service.
+   - Use the APM summary page to evaluate the error rate for that service.
 
-### Step 2: Dig into Errors Inbox
-1. Go to **Errors Inbox**
-2. Look for unique error patterns
-
-### Step 3: Look at application logs
-1. Go to **Logs**
-2. Look for unique log patterns related to all or to specific services
-
-### Step 4: Look at distributed tracing
-1. Find anomalous spans related to services you suspect may be at fault
-2. Capture error messages, logs or other details.
-
-
-### Step 5: Try to Reproduce
-Open the **Astronomy Shop** tab and browse the product catalog.
-Try clicking on **"Roof Binoculars"** — what happens?
-
+### Step 4: Find The Exact Span Name Related to The Error Spike
+1. There are a number of places to find this information, however the trusty *APM* home page is a good starting point.  The left navigation panel in APM provides all the features you'll need (actuallly much more).
+2. For a real savvy power user you could probably identify this with a customer NRQL query although it's not necessary.
+2. Some span names will have simple mnemonic names others will be a little more cryptic.
 
 
 ## 📝 Submit Your Answers
@@ -75,15 +78,15 @@ Once you've identified the root cause, go to the **Check** terminal and enter yo
 **Answer Format:**
 
 ```
-failing service; approximate error rate; failing transaction type
+failing service; approximate error rate; failing transaction name
 ```
 
-**Example:** `checkoutservice; 10%; PlaceOrder`
+**Example:** `frontend; 5%; processItem`
 
 **Format hints:**
-- Failing service: use the exact name as it appears in New Relic (e.g., `checkoutservice`)
-- Approximate error rate: the % of transactions failing — observe the error rate in APM and round to the nearest 5% (e.g., `10%`)
-- Failing transaction type: what operation is erroring? — look in the Errors tab or Distributed Tracing (e.g., `PlaceOrder`)
+- Failing service: use the exact name as it appears in New Relic APM (e.g., `frontend`)
+- Approximate error rate: observe the error rate in APM and round to the nearest 5% (e.g., `5%`)
+- Failing transaction name: This is the exact text of the span's `name` attribute (e.g., `processItem`)
 
 Click the **Check** button to validate. You can re-enter if incorrect.
 
@@ -92,15 +95,7 @@ Click the **Check** button to validate. You can re-enter if incorrect.
 - You have **15 minutes** for this incident
 - If stuck after 10 minutes, ask your Game Manager for a hint
 - Your SLO burn rate is ticking — move fast! 🚀
-
-<!--
-
-## Gotchas to Watch in Beta Testing
-
-- This is the first incident where teams must observe a PATTERN, not a
-  single event. Watch for groups who try checkout once, it happens to
-  succeed, and they report "no incident." Game manager hint: "The error
-  is intermittent — try at least 5 times."
+ — try at least 5 times."
 
 - The error rate fluctuates over time. A student who checks APM in a
   "lucky" window may see a lower rate than the configured ~25%. The check
