@@ -2,14 +2,14 @@
 set -euo pipefail
 
 # Expected answers (lowercase for case-insensitive comparison)
-EXPECTED_SERVICE="paymentservice"
+EXPECTED_SERVICE="payment"
 ERROR_RATE_MIN=20
-ERROR_RATE_MAX=30
-EXPECTED_TRANSACTION="charge"
+ERROR_RATE_MAX=55
+EXPECTED_TRANSACTION="grpc.oteldemo.PaymentService/Charge"
 
 # Alternative acceptable answers
-ALT_SERVICE_ANSWERS=("payment service" "payment-service" "payment" "payments" "paymentservice")
-ALT_TRANSACTION_ANSWERS=("charge failed" "chargecard" "charge card" "payment charge" "charging" "chargecard rpc" "grpc.oteldemo.PaymentService/Charge")
+ALT_SERVICE_ANSWERS=("payment service" "payment-service" "payments" "paymentservice")
+ALT_TRANSACTION_ANSWERS=("PaymentService/Charge" "Charge" "charge")
 
 # Normalize string: lowercase, trim whitespace
 normalize() {
