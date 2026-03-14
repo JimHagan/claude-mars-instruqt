@@ -56,7 +56,7 @@ Look at your workload.  You'll see that one or more of the services are showing 
 
 However let's try to find the `downstream` cause of it's current state.
 
-### Step 1: Dig into APM
+### Step 3: Dig into APM
 1. Go to **APM & Services**
 2. Click into the `checkout` service and examine:
    - The **Errors** Inbox — look at the error messages and stack traces
@@ -65,7 +65,7 @@ However let's try to find the `downstream` cause of it's current state.
    - View the APM summary for **that** downstream service.
    - Use the APM summary page to evaluate the error rate for that service.
 
-### Step 3: Find The Exact Span Name Related to The Error Spike
+### Step 4: Find The Exact Span Name Related to The Error Spike
 1. There are a number of places to find this information, however the trusty *APM* home page is a good starting point.  The left navigation panel in APM provides all the features you'll need (actuallly much more).
 2. For a real savvy power user you could probably identify this with a customer NRQL query although it's not necessary.
 2. Some span names will have simple mnemonic names others will be a little more cryptic.
@@ -86,7 +86,7 @@ failing service; approximate error rate; failing transaction name
 **Format hints:**
 - Failing service: use the exact name as it appears in New Relic APM (e.g., `frontend`)
 - Approximate error rate: observe the error rate in APM and round to the nearest 5% (e.g., `5%`)
-- Failing transaction name: This is the exact text of the spans `name` attribute (e.g., `processItem`)
+- Failing transaction name: This is the exact text of the span's `name` attribute (e.g., `processItem`)
 
 Click the **Check** button to validate. You can re-enter if incorrect.
 
